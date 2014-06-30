@@ -1,7 +1,7 @@
 var squareMap = [];
 var squareTypes = ['#fff','#000']; //#fff - nothing / #000 - obstacle
 var squareSize = 30;
-var canvasSize = 600+squareSize;	
+var canvasSize = 600;	
 var canvas = '';
 
 //Function to draw the agents...
@@ -16,17 +16,22 @@ function drawSquare(square, context) {
     for(var i=0;i<square.getBullets().length;i++) {
         var bullet = square.getBullets()[i];
 		//updating bullet trajectory
-		if(bullet.targetPosition.x != bullet.currPosition.x && bullet.targetPosition.y != bullet.currPosition.y) {		 
+		if((Math.pow((bullet.currPosition.x - square.getX()),2) + Math.pow((bullet.currPosition.y - square.getY()),2)) < Math.pow(square.getRangeOfSight(),2)) {		 
 			bullet.currPosition.x += bullet.power*bullet.direction.x;
 			bullet.currPosition.y += bullet.power*bullet.direction.y;
 			context.beginPath();
-			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2,3, 0, 2 * Math.PI, false);  							
+			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, 5, 0, 2 * Math.PI, false);  							
 			context.lineWidth = 1;
 			context.strokeStyle = square.getColor();
 			context.fill();
 			context.stroke();
-		} else {
-			square.getBullets().splice(i,1); //Remove the bullet from the array
+			context.fillStyle = "blue";
+			context.font = "bold "+squareSize/2+"px Arial";
+			context.fillText('bullet x: ' + bullet.currPosition.x + ', y: ' + bullet.currPosition.y, bullet.currPosition.x, bullet.currPosition.y);
+			context.font = "bold "+squareSize/2+"px Arial";
+			context.fillText('target x: ' + bullet.targetPosition.x + ', y: ' + bullet.targetPosition.y, bullet.currPosition.x, bullet.currPosition.y-15)
+		} else {			
+			square.getBullets().splice(i,1); //Remove the bullet from the array			
 		}		        
     }
     //Agent	
@@ -77,7 +82,9 @@ function detectBulletCollision(bullet) {
 //Function to check for agents impact between each other
 function detectAgentCollision(square) {
 	for (var i = 0; i < squareList.length; i++) {
-		
+		if(square.getId()!=squareList[i]) {
+			//if()
+		}
 	}
 }
 
@@ -132,22 +139,25 @@ function generateWorld() {
 	var v1 = squareList[0];
 	v1.setColor('#afa');
 	v1.setId('v1');
-    v1.setRangeOfSight(canvasSize/1.5);
+	v1.setX(canvasSize/2);
+	v1.setY(canvasSize/2);
+    v1.setRangeOfSight(canvasSize/2);
 	v1.chooseDestiny = function(squareMap) {	    		
-		/*
-		Random walking example 1		
-		*/
+		
+		//Random walking example 1				
+		//If has a target...
+		if(v1.hasTargetInSight(squareList)) {
+			//...shoot the target.
+			v1.shootIt();			
+		} /*else {
+			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));	
+		}			
 		//Select a random destination.
 		var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
 		if(!move()) {
 			//if it can't move, randomize the direction...
 			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
-		}
-		//If has a target...
-		if(v1.hasTargetInSight(squareList)) {
-			//...shoot the target.
-			v1.shootIt();			
-		} 	    
+		}	*/	   
 	};	
     
 	var v2 = squareList[1];
@@ -155,8 +165,11 @@ function generateWorld() {
 	v2.setId('v2');
 	v2.setX(canvasSize - squareSize*2);
 	v2.setY(canvasSize - squareSize*2);
-	v2.setRangeOfSight(canvasSize);
+	v2.setRangeOfSight(canvasSize/2);
 	v2.chooseDestiny = function(squareMap) {
+		if(v2.hasTargetInSight(squareList)) {
+			v2.shootIt();
+		}
 		//Circle walking...
 		if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
 			if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
@@ -164,10 +177,7 @@ function generateWorld() {
 			} else {
 				v2.setDirectionIndex(0); 
 			}
-		}
-		if(v2.hasTargetInSight(squareList)) {
-			v2.shootIt();
-		}		
+		}				
 	};
 	
 	createRandomSimulatorRoom();
