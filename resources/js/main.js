@@ -22,14 +22,17 @@ function drawSquare(square, context) {
 			context.beginPath();
 			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, 5, 0, 2 * Math.PI, false);  							
 			context.lineWidth = 1;
-			context.strokeStyle = square.getColor();
-			context.fill();
+			context.strokeStyle = "black";
+			context.fillStyle = square.getColor();	
+			context.fill();			
 			context.stroke();
-			context.fillStyle = "blue";
+			
+			context.beginPath();	
 			context.font = "bold "+squareSize/2+"px Arial";
-			context.fillText('bullet x: ' + bullet.currPosition.x + ', y: ' + bullet.currPosition.y, bullet.currPosition.x, bullet.currPosition.y);
-			context.font = "bold "+squareSize/2+"px Arial";
-			context.fillText('target x: ' + bullet.targetPosition.x + ', y: ' + bullet.targetPosition.y, bullet.currPosition.x, bullet.currPosition.y-15)
+		    context.fillStyle = "black";			    	
+			context.fillText('bullet x: ' + bullet.currPosition.x + ', y: ' + bullet.currPosition.y, bullet.currPosition.x, bullet.currPosition.y);			
+			context.fillText('target x: ' + bullet.targetPosition.x + ', y: ' + bullet.targetPosition.y, bullet.currPosition.x, bullet.currPosition.y-15);
+			context.stroke();
 		} else {			
 			square.getBullets().splice(i,1); //Remove the bullet from the array			
 		}		        
@@ -41,11 +44,13 @@ function drawSquare(square, context) {
     context.fill();
     context.lineWidth = 1;
     context.strokeStyle = 'black';
-    context.stroke();
-    //Life
+    context.stroke();    
+	//Life
+	context.beginPath();	
     context.fillStyle = "blue";
     context.font = "bold "+squareSize/2+"px Arial";
-    context.fillText(square.getLife(), square.getX()+5, square.getY()+15);	
+    context.fillText(square.getLife(), square.getX()+5, square.getY()+15);
+	context.stroke();
 }
 
 //Function to create the room
@@ -169,16 +174,15 @@ function generateWorld() {
 	v2.chooseDestiny = function(squareMap) {
 		if(v2.hasTargetInSight(squareList)) {
 			v2.shootIt();
-		} else {
-			//Circle walking...
-			if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
-				if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
-					v2.setDirectionIndex(v2.getDirectionIndex()+1);
-				} else {
-					v2.setDirectionIndex(0); 
-				}
-			}				
-		}
+		} 	
+		//Circle walking...
+		if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
+			if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
+				v2.setDirectionIndex(v2.getDirectionIndex()+1);
+			} else {
+				v2.setDirectionIndex(0); 
+			}
+		}	
 	};
 	
 	createRandomSimulatorRoom();
