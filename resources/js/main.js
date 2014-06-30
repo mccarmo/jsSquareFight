@@ -15,12 +15,19 @@ function drawSquare(square, context) {
     //Bullets
     for(var i=0;i<square.getBullets().length;i++) {
         var bullet = square.getBullets()[i];
-        context.beginPath();
-        context.moveTo(bullet[1][0]+squareSize/2,bullet[1][1]+squareSize/2);  
-        context.lineTo(bullet[0][0]+squareSize/2,bullet[0][1]+squareSize/2);	
-        context.lineWidth = 1;
-        context.strokeStyle = square.getColor();
-        context.stroke();
+		//updating bullet trajectory
+		if(bullet.targetPosition.x != bullet.position.x && bullet.targetPosition.y != bullet.position.y) {		 
+			bullet.position.x += bullet.power;
+			bullet.position.y += bullet.power;
+			/*context.beginPath();
+			context.moveTo(bullet.position.x+squareSize/2,bullet.position.y+squareSize/2);  
+			context.lineTo(bullet.targetPosition.x+squareSize/2,bullet.targetPosition.y+squareSize/2);				
+			context.lineWidth = 1;
+			context.strokeStyle = square.getColor();
+			context.stroke();*/
+		} else {
+			square.getBullets().splice(i,1); //Remove the bullet from the array
+		}		        
     }
     //Agent	
     context.beginPath();
@@ -111,7 +118,7 @@ function generateWorld() {
 	var v1 = squareList[0];
 	v1.setColor('#afa');
 	v1.setId('v1');
-        v1.setRangeOfSight(canvasSize/2);
+    v1.setRangeOfSight(canvasSize/2);
 	v1.chooseDestiny = function(squareMap) {	    		
 		/*
 		Random walking example 1		
