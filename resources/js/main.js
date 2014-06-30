@@ -169,15 +169,16 @@ function generateWorld() {
 	v2.chooseDestiny = function(squareMap) {
 		if(v2.hasTargetInSight(squareList)) {
 			v2.shootIt();
+		} else {
+			//Circle walking...
+			if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
+				if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
+					v2.setDirectionIndex(v2.getDirectionIndex()+1);
+				} else {
+					v2.setDirectionIndex(0); 
+				}
+			}				
 		}
-		//Circle walking...
-		if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
-			if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
-				v2.setDirectionIndex(v2.getDirectionIndex()+1);
-			} else {
-				v2.setDirectionIndex(0); 
-			}
-		}				
 	};
 	
 	createRandomSimulatorRoom();
