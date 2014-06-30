@@ -6,22 +6,22 @@ function Square() {
     this.init = function(properties) {
         context.x = properties.x;
         context.y = properties.y;
-	context.id = properties.id;
-	context.color = properties.color;
+		context.id = properties.id;
+		context.color = properties.color;
         context.squareSize = properties.squareSize;
         context.stepSize = properties.stepSize;
         context.canvasSize = properties.canvasSize;    
-	context.life = properties.life;			
-	context.targetIndex = -1;
-	context.directionIndex = 0;
-	context.directionsArray = [];   
-	context.bullets = [];		
-	context.rangeOfSight = properties.rangeOfSight;
-	context.currTargetPosition = [];
+		context.life = properties.life;			
+		context.targetIndex = -1;
+		context.directionIndex = 0;
+		context.directionsArray = [];   
+		context.bullets = [];		
+		context.rangeOfSight = properties.rangeOfSight;
+		context.currTargetPosition = [];
         context.directionsArray.push(context.goUp());
-	context.directionsArray.push(context.goRight());
-	context.directionsArray.push(context.goDown());
-	context.directionsArray.push(context.goLeft());				
+		context.directionsArray.push(context.goRight());
+		context.directionsArray.push(context.goDown());
+		context.directionsArray.push(context.goLeft());				
     };
     
     this.goRight = function() {	  
@@ -105,8 +105,8 @@ function Square() {
         for(var i=0;i<squareList.length;i++) {		 
 	        if(squareList[i].getId()!=context.id) {
 		        if((Math.pow((squareList[i].getX() - context.getX()),2) + Math.pow((squareList[i].getY() - context.getY()),2)) < Math.pow(context.getRangeOfSight(),2)) {				
-			    context.currTargetPosition = [squareList[i].getX(),squareList[i].getY()];					
-			    return true;					
+					context.currTargetPosition = {'x':squareList[i].getX(),'y':squareList[i].getY()};					
+					return true;					
 		        } else {
 			    context.currTargetPosition = [];
 		        }
@@ -118,19 +118,19 @@ function Square() {
     this.shootIt = function() {     
 		var dX, dY;
 		
-		dX = context.calculateDirection(context.getX(),context.currTargetPosition[0]);
-		dY = context.calculateDirection(context.getY(),context.currTargetPosition[1]);
+		dX = context.calculateDirection(context.getX(),context.currTargetPosition.x);
+		dY = context.calculateDirection(context.getY(),context.currTargetPosition.y);
 		
 		var bullet = {
-			targetPosition: {'x':context.currTargetPosition[0],'y':context.currTargetPosition[1]},
+			targetPosition: {'x':context.currTargetPosition.x,'y':context.currTargetPosition.y},
 			initPosition: {'x':context.getX(),'y':context.getY()},
 			currPosition: {'x':context.getX(),'y':context.getY()},			
-			power: 1,
+			power: 3,
 			direction: {'x':dX, 'y':dY} 
 		};
 		
-        if(context.bullets.length < 10) {              
-			context.bullets.push(bullet);  			
+        if(context.bullets.length < 1) {              
+			context.bullets.push(bullet);  					
 		}           	
     };
 	
