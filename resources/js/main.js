@@ -36,7 +36,7 @@ function drawSquare(square, context) {
     context.fillText(square.getLife(), square.getX()+5, square.getY()+15);	
 }
 
-//Function to draw the random dirty room
+//Function to create the room
 function createRandomSimulatorRoom() {
     for (var x = 0; x < (canvasSize+1); x += squareSize) {
         for (var y = 0; y < (canvasSize+1); y += squareSize) { 								
@@ -67,7 +67,7 @@ function animate(squareList, canvas, context) {
 			
     drawDirtyRoomTiles(context);
     
-    //Vacuum Cleaner brain goes here...
+    //Agent brain goes here...
     squareList.map(function(v){
         v.chooseDestiny(squareMap); 
         drawSquare(v, context);
@@ -101,7 +101,7 @@ function generateWorld() {
         
     var squareList = []; 	
 	
-	/*Creating a herb square and give it some brain (chooseDestiny function)....*/	
+	/*Creating the agent and his brain (chooseDestiny function)....*/	
 	for(var i = 0;i<2;i++) {
 		var square = new Square();
 		square.init({'x':squareSize,'y':squareSize,'stepSize':3,'rangeOfSight':canvasSize/4,'life':10,'squareSize':squareSize,'canvasSize':canvasSize});
