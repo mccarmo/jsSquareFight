@@ -1,0 +1,154 @@
+var squareMap = [];
+var squareTypes = ['#fff','#000']; //#fff - nothing / #000 - obstacle
+var squareSize = 30;
+var canvasSize = 600+squareSize;	
+var canvas = '';
+
+//Function to draw the agents...
+function drawSquare(square, context) { 
+    //Ray Of Sight	
+    context.beginPath();
+    context.arc(square.getX()+squareSize/2, square.getY()+squareSize/2, square.getRangeOfSight(), 0, 2 * Math.PI, false);         
+    context.lineWidth = 1;
+    context.strokeStyle = square.getColor();
+    context.stroke();  
+    //Bullets
+    for(var i=0;i<square.getBullets().length;i++) {
+        var bullet = square.getBullets()[i];
+        context.beginPath();
+        context.moveTo(bullet[1][0]+squareSize/2,bullet[1][1]+squareSize/2);  
+        context.lineTo(bullet[0][0]+squareSize/2,bullet[0][1]+squareSize/2);	
+        context.lineWidth = 1;
+        context.strokeStyle = square.getColor();
+        context.stroke();
+    }
+    //Agent	
+    context.beginPath();
+    context.rect(square.getX(), square.getY(), squareSize, squareSize);
+    context.fillStyle = square.getColor();
+    context.fill();
+    context.lineWidth = 1;
+    context.strokeStyle = 'black';
+    context.stroke();
+    //Life
+    context.fillStyle = "blue";
+    context.font = "bold "+squareSize/2+"px Arial";
+    context.fillText(square.getLife(), square.getX()+5, square.getY()+15);	
+}
+
+//Function to draw the random dirty room
+function createRandomSimulatorRoom() {
+    for (var x = 0; x < (canvasSize+1); x += squareSize) {
+        for (var y = 0; y < (canvasSize+1); y += squareSize) { 								
+            if(x == 0 || y == 0 || x >= canvasSize-squareSize || y >= canvasSize-squareSize) {
+                squareMap.push([x,y,'#000',1]);
+			} 		
+        }
+    }    	
+}  
+
+//Function to draw the room
+function drawDirtyRoomTiles(context) {
+    for (var i = 0; i < squareMap.length; i++) {  
+        context.beginPath();
+        context.rect(squareMap[i][0],squareMap[i][1], squareSize, squareSize);
+        context.fillStyle = squareMap[i][2];
+        context.fill();
+        context.lineWidth = 1;
+        context.strokeStyle = '#bbb';					
+        context.stroke(); 		
+   } 
+}			
+
+//Function to animate the game!
+function animate(squareList, canvas, context) {	
+    //Clear
+    context.clearRect(0, 0, canvas.width, canvas.height);
+			
+    drawDirtyRoomTiles(context);
+    
+    //Vacuum Cleaner brain goes here...
+    squareList.map(function(v){
+        v.chooseDestiny(squareMap); 
+        drawSquare(v, context);
+    });
+
+    //Request new frame
+    requestAnimFrame(function() {
+        setTimeout(function() {
+	    animate(squareList, canvas, context);
+        }, 10);
+    });
+}
+
+//Function to generate the requested game type by initializing the room and the agents.
+function generateWorld() {	
+    squareMap = [];
+    canvas = document.getElementById('simulatorRoom');
+    canvas.width = canvasSize;
+    canvas.height = canvasSize;
+    
+    var context = canvas.getContext('2d');
+
+    window.requestAnimFrame = (function(callback) {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || 
+		   window.mozRequestAnimationFrame || window.oRequestAnimationFrame || 
+		   window.msRequestAnimationFrame ||
+		function(callback) {
+			window.setTimeout(callback, 1000 / 60);
+		};
+    })();
+        
+    var squareList = []; 	
+	
+	/*Creating a herb square and give it some brain (chooseDestiny function)....*/	
+	for(var i = 0;i<2;i++) {
+		var square = new Square();
+		square.init({'x':squareSize,'y':squareSize,'stepSize':3,'rangeOfSight':canvasSize/4,'life':10,'squareSize':squareSize,'canvasSize':canvasSize});
+		squareList.push(square);		
+	}
+		
+	var v1 = squareList[0];
+	v1.setColor('#afa');
+	v1.setId('v1');
+        v1.setRangeOfSight(canvasSize/2);
+	v1.chooseDestiny = function(squareMap) {	    		
+		/*
+		Random walking example 1		
+		*/
+		//Select a random destination.
+		var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
+		if(!move()) {
+			//if it can't move, randomize the direction...
+			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
+		}
+		//If has a target...
+		if(v1.hasTargetInSight(squareList)) {
+			//...shoot the target.
+			v1.shootIt();			
+		} 	    
+	};	
+    
+	var v2 = squareList[1];
+	v2.color = '#faa';
+	v2.setId('v2');
+	v2.setX(canvasSize - squareSize*2);
+	v2.setY(canvasSize - squareSize*2);
+	v2.chooseDestiny = function(squareMap) {
+		//Circle walking...
+		if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
+			if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
+				v2.setDirectionIndex(v2.getDirectionIndex()+1);
+			} else {
+				v2.setDirectionIndex(0); 
+			}
+		}
+		if(v2.hasTargetInSight(squareList)) {
+			v2.shootIt();
+		}		
+	};
+	
+	createRandomSimulatorRoom();
+	
+    animate(squareList, canvas, context);
+}
