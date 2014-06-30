@@ -115,13 +115,16 @@ function Square() {
 	return false;
     };
 
-    this.shootIt = function() {                
-        if(context.bullets.length > 10) {
-            context.bullets.shift();
-            context.bullets.push([context.currTargetPosition,[context.getX(),context.getY()]]);          
-        } else {
-            context.bullets.push([context.currTargetPosition,[context.getX(),context.getY()]]);          
-        }
+    this.shootIt = function() {     
+		var bullet = {
+			targetPosition: {'x':context.currTargetPosition[0],'y':context.currTargetPosition[1]},
+			position: {'x':context.getX(),'y':context.getY()},
+			power: 5
+		};
+        if(context.bullets.length > 100) {
+            context.bullets.shift();            
+		}
+        context.bullets.push(bullet);     	
     };
 	
     /*Get's*/
