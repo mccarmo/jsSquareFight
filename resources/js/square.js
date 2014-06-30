@@ -116,16 +116,32 @@ function Square() {
     };
 
     this.shootIt = function() {     
+		var dX, dY;
+		
+		dX = context.calculateDirection(context.getX(),context.currTargetPosition[0]);
+		dY = context.calculateDirection(context.getY(),context.currTargetPosition[1]);
+		
 		var bullet = {
 			targetPosition: {'x':context.currTargetPosition[0],'y':context.currTargetPosition[1]},
-			position: {'x':context.getX(),'y':context.getY()},
-			power: 5
+			initPosition: {'x':context.getX(),'y':context.getY()},
+			currPosition: {'x':context.getX(),'y':context.getY()},			
+			power: 1,
+			direction: {'x':dX, 'y':dY} 
 		};
-        if(context.bullets.length > 100) {
-            context.bullets.shift();            
-		}
-        context.bullets.push(bullet);     	
+		
+        if(context.bullets.length < 10) {              
+			context.bullets.push(bullet);  			
+		}           	
     };
+	
+	this.calculateDirection = function(self,target) {
+		if(target < self) { 
+			return -1;
+		} else if (target > self) {
+			return 1;
+		} 
+		return 0;
+	}
 	
     /*Get's*/
     this.getX = function() {
