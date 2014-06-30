@@ -16,15 +16,15 @@ function drawSquare(square, context) {
     for(var i=0;i<square.getBullets().length;i++) {
         var bullet = square.getBullets()[i];
 		//updating bullet trajectory
-		if(bullet.targetPosition.x != bullet.position.x && bullet.targetPosition.y != bullet.position.y) {		 
-			bullet.position.x += bullet.power;
-			bullet.position.y += bullet.power;
-			/*context.beginPath();
-			context.moveTo(bullet.position.x+squareSize/2,bullet.position.y+squareSize/2);  
-			context.lineTo(bullet.targetPosition.x+squareSize/2,bullet.targetPosition.y+squareSize/2);				
+		if(bullet.targetPosition.x != bullet.currPosition.x && bullet.targetPosition.y != bullet.currPosition.y) {		 
+			bullet.currPosition.x += bullet.power*bullet.direction.x;
+			bullet.currPosition.y += bullet.power*bullet.direction.y;
+			context.beginPath();
+			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2,3, 0, 2 * Math.PI, false);  							
 			context.lineWidth = 1;
 			context.strokeStyle = square.getColor();
-			context.stroke();*/
+			context.fill();
+			context.stroke();
 		} else {
 			square.getBullets().splice(i,1); //Remove the bullet from the array
 		}		        
@@ -65,7 +65,21 @@ function drawDirtyRoomTiles(context) {
         context.strokeStyle = '#bbb';					
         context.stroke(); 		
    } 
-}			
+}		
+	
+//Function to check for bullet impact on targets
+function detectBulletCollision(bullet) {
+	for (var i = 0; i < squareList.length; i++) {
+		
+	}
+}
+
+//Function to check for agents impact between each other
+function detectAgentCollision(square) {
+	for (var i = 0; i < squareList.length; i++) {
+		
+	}
+}
 
 //Function to animate the game!
 function animate(squareList, canvas, context) {	
@@ -118,7 +132,7 @@ function generateWorld() {
 	var v1 = squareList[0];
 	v1.setColor('#afa');
 	v1.setId('v1');
-    v1.setRangeOfSight(canvasSize/2);
+    v1.setRangeOfSight(canvasSize/1.5);
 	v1.chooseDestiny = function(squareMap) {	    		
 		/*
 		Random walking example 1		
@@ -141,6 +155,7 @@ function generateWorld() {
 	v2.setId('v2');
 	v2.setX(canvasSize - squareSize*2);
 	v2.setY(canvasSize - squareSize*2);
+	v2.setRangeOfSight(canvasSize);
 	v2.chooseDestiny = function(squareMap) {
 		//Circle walking...
 		if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
