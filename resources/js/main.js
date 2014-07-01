@@ -15,24 +15,40 @@ function drawSquare(square, context) {
     //Bullets
     for(var i=0;i<square.getBullets().length;i++) {
         var bullet = square.getBullets()[i];
+		
+		/*
+		* parametric trajectory equations:
+		* x = v * cos(a)* t
+		* y = v * sen(a) * t - (g*t^2)/2 (here the gravity will be zero, so the equation will be "v * sen(a) * t") 
+		* 
+		* the theta:
+		* theta = atan2(y,x) where theta is on radians
+		* where x = x2 - x1 and y = y2 - y1
+		*/					
+		var x = (bullet.targetPosition.x - bullet.currPosition.x) * bullet.direction.x;
+		var y = (bullet.targetPosition.y - bullet.currPosition.y) * bullet.direction.y;
+		var theta = Math.atan2(y,x);
+	
 		//updating bullet trajectory
-		if((Math.pow((bullet.currPosition.x - square.getX()),2) + Math.pow((bullet.currPosition.y - square.getY()),2)) < Math.pow(square.getRangeOfSight(),2)) {		 
-			bullet.currPosition.x += bullet.power*bullet.direction.x;
-			bullet.currPosition.y += bullet.power*bullet.direction.y;
+		if((Math.abs(x) > squareSize/2) && (Math.abs(y) > squareSize/2)) {		 			
+							
+			bullet.currPosition.x += (bullet.power * bullet.direction.x * Math.cos(theta) * 1);
+			bullet.currPosition.y += (bullet.power * bullet.direction.y * Math.sin(theta) * 1);
+			
 			context.beginPath();
-			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, 5, 0, 2 * Math.PI, false);  							
+			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, squareSize/6, 0, 2 * Math.PI, false);  							
 			context.lineWidth = 1;
 			context.strokeStyle = "black";
 			context.fillStyle = square.getColor();	
 			context.fill();			
 			context.stroke();
 			
-			context.beginPath();	
+			/*context.beginPath();	
 			context.font = "bold "+squareSize/2+"px Arial";
 		    context.fillStyle = "black";			    	
 			context.fillText('bullet x: ' + bullet.currPosition.x + ', y: ' + bullet.currPosition.y, bullet.currPosition.x, bullet.currPosition.y);			
 			context.fillText('target x: ' + bullet.targetPosition.x + ', y: ' + bullet.targetPosition.y, bullet.currPosition.x, bullet.currPosition.y-15);
-			context.stroke();
+			context.stroke();*/
 		} else {			
 			square.getBullets().splice(i,1); //Remove the bullet from the array			
 		}		        
@@ -49,7 +65,7 @@ function drawSquare(square, context) {
 	context.beginPath();	
     context.fillStyle = "blue";
     context.font = "bold "+squareSize/2+"px Arial";
-    context.fillText(square.getLife(), square.getX()+5, square.getY()+15);
+    context.fillText(square.getLife(), square.getX()+3, square.getY()+20);
 	context.stroke();
 }
 
@@ -137,7 +153,7 @@ function generateWorld() {
 	/*Creating the agent and his brain (chooseDestiny function)....*/	
 	for(var i = 0;i<2;i++) {
 		var square = new Square();
-		square.init({'x':squareSize,'y':squareSize,'stepSize':3,'rangeOfSight':canvasSize/4,'life':10,'squareSize':squareSize,'canvasSize':canvasSize});
+		square.init({'x':squareSize,'y':squareSize,'stepSize':3,'rangeOfSight':canvasSize/4,'life':100,'squareSize':squareSize,'canvasSize':canvasSize});
 		squareList.push(square);		
 	}
 		
@@ -154,7 +170,7 @@ function generateWorld() {
 		if(v1.hasTargetInSight(squareList)) {
 			//...shoot the target.
 			v1.shootIt();			
-		} /*else {
+		} else {
 			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));	
 		}			
 		//Select a random destination.
@@ -162,7 +178,7 @@ function generateWorld() {
 		if(!move()) {
 			//if it can't move, randomize the direction...
 			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
-		}	*/	   
+		}		   
 	};	
     
 	var v2 = squareList[1];
@@ -182,7 +198,7 @@ function generateWorld() {
 			} else {
 				v2.setDirectionIndex(0); 
 			}
-		}	
+		}		
 	};
 	
 	createRandomSimulatorRoom();
