@@ -96,7 +96,9 @@ function drawDirtyRoomTiles(context) {
 //Function to check for bullet impact on targets
 function detectBulletCollision(bullet) {
 	for (var i = 0; i < squareList.length; i++) {
-		
+		if(fatherId.fatherId!=squareList[i]) {
+			
+		}
 	}
 }
 
@@ -104,7 +106,7 @@ function detectBulletCollision(bullet) {
 function detectAgentCollision(square) {
 	for (var i = 0; i < squareList.length; i++) {
 		if(square.getId()!=squareList[i]) {
-			//if()
+			
 		}
 	}
 }
