@@ -1,4 +1,5 @@
-var squareMap = [];
+var squareMap = [];  //Map Tiles
+var squareList = []; //"players"
 var squareTypes = ['#fff','#000']; //#fff - nothing / #000 - obstacle
 var squareSize = 30;
 var canvasSize = 600;	
@@ -22,7 +23,7 @@ function drawSquare(square, context) {
 		* y = v * sen(a) * t - (g*t^2)/2 (here the gravity will be zero, so the equation will be "v * sen(a) * t") 
 		* 
 		* the theta:
-		* theta = atan2(y,x) where theta is on radians
+		* theta = atan2(y,x) -> theta is on radians
 		* where x = x2 - x1 and y = y2 - y1
 		*/					
 		var x = (bullet.targetPosition.x - bullet.currPosition.x) * bullet.direction.x;
@@ -30,7 +31,7 @@ function drawSquare(square, context) {
 		var theta = Math.atan2(y,x);
 	
 		//updating bullet trajectory
-		if((Math.abs(x) > squareSize/2) && (Math.abs(y) > squareSize/2)) {		 			
+		if((x > 0 && x < canvasSize-squareSize) && (y > 0 && y < canvasSize-squareSize)) {		 			
 							
 			bullet.currPosition.x += (bullet.power * bullet.direction.x * Math.cos(theta) * 1);
 			bullet.currPosition.y += (bullet.power * bullet.direction.y * Math.sin(theta) * 1);
@@ -43,9 +44,11 @@ function drawSquare(square, context) {
 			context.fill();			
 			context.stroke();
 			
+			detectBulletCollision(bullet,squareList)
+			
 			/*context.beginPath();	
 			context.font = "bold "+squareSize/2+"px Arial";
-		    context.fillStyle = "black";			    	
+		    context.fillStyle = "black";		    			
 			context.fillText('bullet x: ' + bullet.currPosition.x + ', y: ' + bullet.currPosition.y, bullet.currPosition.x, bullet.currPosition.y);			
 			context.fillText('target x: ' + bullet.targetPosition.x + ', y: ' + bullet.targetPosition.y, bullet.currPosition.x, bullet.currPosition.y-15);
 			context.stroke();*/
@@ -96,23 +99,40 @@ function drawDirtyRoomTiles(context) {
 //Function to check for bullet impact on targets
 function detectBulletCollision(bullet) {
 	for (var i = 0; i < squareList.length; i++) {
-		if(fatherId.fatherId!=squareList[i]) {
-			
+		if(bullet.fatherId!=squareList[i].getId()) {
+			if((Math.abs(bullet.currPosition.x - squareList[i].getX()) * 2 < (5 + squareList[i].getSquareSize())) &&
+			   (Math.abs(bullet.currPosition.y - squareList[i].getY()) * 2 < (5 + squareList[i].getSquareSize())) ) {				
+				squareList[i].addPenality(1);
+				if(squareList[i].getLife() < 0) {
+					squareList.splice(i,1);
+				}
+			}
 		}
 	}
 }
 
-//Function to check for agents impact between each other
+//Function to check for agents impact between each other and add a penality
 function detectAgentCollision(square) {
-	for (var i = 0; i < squareList.length; i++) {
-		if(square.getId()!=squareList[i]) {
-			
+	for (var i = 0; i < squareList.length; i++) {	   
+		if(square.getId()!=squareList[i].getId()) {		    
+			if((Math.abs(square.getX() - squareList[i].getX()) * 2 < (square.getSquareSize() + squareList[i].getSquareSize())) &&
+			   (Math.abs(square.getY() - squareList[i].getY()) * 2 < (square.getSquareSize() + squareList[i].getSquareSize())) ) {
+				square.addPenality(1);				
+				squareList[i].addPenality(1);
+				if(squareList[i].getLife() < 0) {
+					squareList.splice(i,1);
+				}
+			}
+		} else {
+			if(square.getLife() < 0) {
+				squareList.splice(i,1);
+			}
 		}
 	}
 }
 
 //Function to animate the game!
-function animate(squareList, canvas, context) {	
+function animate(canvas,context) {	
     //Clear
     context.clearRect(0, 0, canvas.width, canvas.height);
 			
@@ -121,13 +141,14 @@ function animate(squareList, canvas, context) {
     //Agent brain goes here...
     squareList.map(function(v){
         v.chooseDestiny(squareMap); 
-        drawSquare(v, context);
+        drawSquare(v, context);	
+	    detectAgentCollision(v,squareList);		
     });
-
+    
     //Request new frame
     requestAnimFrame(function() {
         setTimeout(function() {
-	    animate(squareList, canvas, context);
+	    animate(canvas,context);
         }, 10);
     });
 }
@@ -149,9 +170,7 @@ function generateWorld() {
 			window.setTimeout(callback, 1000 / 60);
 		};
     })();
-        
-    var squareList = []; 	
-	
+
 	/*Creating the agent and his brain (chooseDestiny function)....*/	
 	for(var i = 0;i<2;i++) {
 		var square = new Square();
@@ -162,8 +181,8 @@ function generateWorld() {
 	var v1 = squareList[0];
 	v1.setColor('#afa');
 	v1.setId('v1');
-	v1.setX(canvasSize/2);
-	v1.setY(canvasSize/2);
+	//v1.setX(canvasSize/2);
+	//v1.setY(canvasSize/2);
     v1.setRangeOfSight(canvasSize/2);
 	v1.chooseDestiny = function(squareMap) {	    		
 		
@@ -180,7 +199,7 @@ function generateWorld() {
 		if(!move()) {
 			//if it can't move, randomize the direction...
 			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
-		}		   
+		}	   
 	};	
     
 	var v2 = squareList[1];
@@ -188,7 +207,7 @@ function generateWorld() {
 	v2.setId('v2');
 	v2.setX(canvasSize - squareSize*2);
 	v2.setY(canvasSize - squareSize*2);
-	v2.setRangeOfSight(canvasSize/2);
+	v2.setRangeOfSight(canvasSize);
 	v2.chooseDestiny = function(squareMap) {
 		if(v2.hasTargetInSight(squareList)) {
 			v2.shootIt();
@@ -205,5 +224,5 @@ function generateWorld() {
 	
 	createRandomSimulatorRoom();
 	
-    animate(squareList, canvas, context);
+    animate(canvas,context);
 }
