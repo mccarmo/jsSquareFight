@@ -122,10 +122,11 @@ function Square() {
 		dY = context.calculateDirection(context.getY(),context.currTargetPosition.y);
 		
 		var bullet = {
+		    fatherId: context.getId(),
 			targetPosition: {'x':context.currTargetPosition.x,'y':context.currTargetPosition.y},
 			initPosition: {'x':context.getX(),'y':context.getY()},
 			currPosition: {'x':context.getX(),'y':context.getY()},			
-			power: 3,
+			power: 5	,
 			direction: {'x':dX, 'y':dY} 
 		};
 		
