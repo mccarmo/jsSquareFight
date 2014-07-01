@@ -135,6 +135,10 @@ function Square() {
 		}           	
     };
 	
+	/*
+	* Calculates the direction of the bullet
+	* return -1 to X/Y--, 1 To X/Y++ or 0 to X/Y dest = X/Y origin
+	*/
 	this.calculateDirection = function(self,target) {
 		if(target < self) { 
 			return -1;
@@ -142,6 +146,13 @@ function Square() {
 			return 1;
 		} 
 		return 0;
+	}
+	
+	/*
+	* Add a penality to the agent life
+	*/
+	this.addPenality = function(points) {
+		context.setLife(context.getLife()-points);
 	}
 	
     /*Get's*/
@@ -215,7 +226,11 @@ function Square() {
     this.setColor = function(newColor) {
 		context.color = newColor;
     }  
- 
+	
+	this.setLife = function(newLife) {
+		context.life = newLife;
+    }
+	
     this.setCanvasSize = function(newCanvasSize) {
 		context.canvasSize = newCanvasSize;
     }
