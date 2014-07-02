@@ -119,12 +119,12 @@ function Square() {
 	
     this.hasTargetInSight = function(squareList) {  		
         for(var i=0;i<squareList.length;i++) {		 
-	        if(squareList[i].getId()!=context.id) {
+	        if(squareList[i].getId()!=context.id) {				
 		        if((Math.pow((squareList[i].getX() - context.getX()),2) + Math.pow((squareList[i].getY() - context.getY()),2)) < Math.pow(context.getRangeOfSight(),2)) {				
-					context.currTargetPosition = {'x':squareList[i].getX(),'y':squareList[i].getY()};					
+					context.currTargetPosition = {'x':squareList[i].getX(),'y':squareList[i].getY()};																		
 					return true;					
 		        } else {
-					context.currTargetPosition = [];
+					context.currTargetPosition = [];				
 		        }
 	        } 
 		}
@@ -142,7 +142,8 @@ function Square() {
 			targetPosition: {'x':context.currTargetPosition.x,'y':context.currTargetPosition.y},
 			initPosition: {'x':context.getX(),'y':context.getY()},
 			currPosition: {'x':context.getX(),'y':context.getY()},			
-			power: 5,
+			power: 1,
+			velocity: 5, 
 			direction: {'x':dX, 'y':dY} 
 		};
 		
@@ -160,7 +161,7 @@ function Square() {
 			return -1;
 		} else if (target > self) {
 			return 1;
-		} 
+		} 				
 		return 0;
 	}
 	
