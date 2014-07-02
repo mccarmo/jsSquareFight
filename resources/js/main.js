@@ -13,10 +13,29 @@ function drawSquare(square, context) {
     context.lineWidth = 1;
     context.strokeStyle = square.getColor();
     context.stroke();  
-    //Bullets
+    //Draw Bullets
+	drawSquareBullets(square,context);
+    //Agent	
+    context.beginPath();
+    context.rect(square.getX(), square.getY(), squareSize, squareSize);
+    context.fillStyle = square.getColor();
+    context.fill();
+    context.lineWidth = 1;
+    context.strokeStyle = 'black';
+    context.stroke();    
+	//Life
+	context.beginPath();	
+    context.fillStyle = "blue";
+    context.font = "bold "+squareSize/2+"px Arial";
+    context.fillText(square.getLife(), square.getX()+3, square.getY()+20);
+	context.stroke();
+}
+
+//Draw Bullets
+function drawSquareBullets(square,context) {
+	//Bullets
     for(var i=0;i<square.getBullets().length;i++) {
-        var bullet = square.getBullets()[i];
-		
+        var bullet = square.getBullets()[i];		
 		/*
 		* parametric trajectory equations:
 		* x = v * cos(a)* t
@@ -31,10 +50,10 @@ function drawSquare(square, context) {
 		var theta = Math.atan2(y,x);
 	
 		//updating bullet trajectory
-		if((x > 0 && x < canvasSize-squareSize) && (y > 0 && y < canvasSize-squareSize)) {		 			
+		if((x >= 0 && x < canvasSize-squareSize) && (y >= 0 && y < canvasSize-squareSize)) {		 			
 							
-			bullet.currPosition.x += (bullet.power * bullet.direction.x * Math.cos(theta) * 1);
-			bullet.currPosition.y += (bullet.power * bullet.direction.y * Math.sin(theta) * 1);
+			bullet.currPosition.x += (bullet.velocity * bullet.direction.x * Math.cos(theta) * 1);
+			bullet.currPosition.y += (bullet.velocity * bullet.direction.y * Math.sin(theta) * 1);
 			
 			context.beginPath();
 			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, squareSize/6, 0, 2 * Math.PI, false);  							
@@ -59,20 +78,6 @@ function drawSquare(square, context) {
 			square.getBullets().splice(i,1); //Remove the bullet from the array			
 		}		        
     }
-    //Agent	
-    context.beginPath();
-    context.rect(square.getX(), square.getY(), squareSize, squareSize);
-    context.fillStyle = square.getColor();
-    context.fill();
-    context.lineWidth = 1;
-    context.strokeStyle = 'black';
-    context.stroke();    
-	//Life
-	context.beginPath();	
-    context.fillStyle = "blue";
-    context.font = "bold "+squareSize/2+"px Arial";
-    context.fillText(square.getLife(), square.getX()+3, square.getY()+20);
-	context.stroke();
 }
 
 //Function to create the room
@@ -186,7 +191,7 @@ function generateWorld() {
 	var v1 = squareList[0];
 	v1.setColor('#afa');
 	v1.setId('v1');
-	//v1.setX(canvasSize/2);
+	//v1.setX(squareSize*2);
 	//v1.setY(canvasSize/2);
     v1.setRangeOfSight(canvasSize/1.5);
 	v1.chooseDestiny = function(squareMap) {	    		
@@ -195,22 +200,22 @@ function generateWorld() {
 		//If has a target...
 		if(v1.hasTargetInSight(squareList)) {
 			//...shoot the target.
-			v1.shootIt();			
-		} else {
 			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));	
-		}			
-		//Select a random destination.
-		var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
-		if(!move()) {
-			//if it can't move, randomize the direction...
-			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
-		}	   
+			v1.shootIt();			    		
+		} else {
+			//Select a random destination.
+			var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
+			if(!move()) {
+				//if it can't move, randomize the direction...
+				v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
+			}
+		}						  
 	};	
     
 	var v2 = squareList[1];
 	v2.color = '#faa';
 	v2.setId('v2');
-	v2.setX(canvasSize - squareSize*2);
+	v2.setX(squareSize*2);
 	v2.setY(canvasSize - squareSize*2);
 	v2.setRangeOfSight(canvasSize/1.5);
 	v2.chooseDestiny = function(squareMap) {
