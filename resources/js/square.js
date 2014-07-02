@@ -1,6 +1,6 @@
 function Square() {
     var context = this;
-    var x,y,id,color,squareSize,stepSize,canvasSize,targetIndex, directionIndex,directionsArray;
+    var x,y,id,color,squareSize,stepSize,canvasSize,targetIndex, directionIndex,directionsArray,spotedEnemyBullets;
 	var life, bullets, rangeOfSight, currTargetPosition;
    
     this.init = function(properties) {
@@ -16,6 +16,7 @@ function Square() {
 		context.directionIndex = 0;
 		context.directionsArray = [];   
 		context.bullets = [];		
+		context.spotedEnemyBullets = [];
 		context.rangeOfSight = properties.rangeOfSight;
 		context.currTargetPosition = [];
         context.directionsArray.push(context.goUp());
@@ -100,7 +101,22 @@ function Square() {
 		}
 		return false;
     };
-  
+	
+	this.hasEnemyBullet = function(squareList) {
+		for(var i=0;i<squareList.length;i++) {		 
+	        if(squareList[i].getId()!=context.id) {
+				for(var j=0;j<squareList[i].getBullets().length;j++) {	
+					var bullet = squareList[i].getBullets()[j];
+					if((Math.pow((bullet.currPosition.x - context.getX()),2) + Math.pow((bullet.currPosition.y - context.getY()),2)) < Math.pow(context.getRangeOfSight(),2)) {				
+						context.spotedEnemyBullets.push({'x':bullet.currPosition.x,'y':bullet.currPosition.y});					
+						return true;					
+					} 
+				}
+	        } 
+		}
+		return false;	
+	}
+	
     this.hasTargetInSight = function(squareList) {  		
         for(var i=0;i<squareList.length;i++) {		 
 	        if(squareList[i].getId()!=context.id) {
@@ -108,11 +124,11 @@ function Square() {
 					context.currTargetPosition = {'x':squareList[i].getX(),'y':squareList[i].getY()};					
 					return true;					
 		        } else {
-			    context.currTargetPosition = [];
+					context.currTargetPosition = [];
 		        }
 	        } 
-	}
-	return false;
+		}
+		return false;
     };
 
     this.shootIt = function() {     
@@ -126,7 +142,7 @@ function Square() {
 			targetPosition: {'x':context.currTargetPosition.x,'y':context.currTargetPosition.y},
 			initPosition: {'x':context.getX(),'y':context.getY()},
 			currPosition: {'x':context.getX(),'y':context.getY()},			
-			power: 5	,
+			power: 5,
 			direction: {'x':dX, 'y':dY} 
 		};
 		
