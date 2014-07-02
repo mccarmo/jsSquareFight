@@ -44,7 +44,10 @@ function drawSquare(square, context) {
 			context.fill();			
 			context.stroke();
 			
-			detectBulletCollision(bullet,squareList)
+			//If bullet hits a target, the bullet will be erased
+			if(detectBulletCollision(bullet,squareList)) {
+				square.getBullets().splice(i,1);
+			}
 			
 			/*context.beginPath();	
 			context.font = "bold "+squareSize/2+"px Arial";
@@ -102,13 +105,15 @@ function detectBulletCollision(bullet) {
 		if(bullet.fatherId!=squareList[i].getId()) {
 			if((Math.abs(bullet.currPosition.x - squareList[i].getX()) * 2 < (5 + squareList[i].getSquareSize())) &&
 			   (Math.abs(bullet.currPosition.y - squareList[i].getY()) * 2 < (5 + squareList[i].getSquareSize())) ) {				
-				squareList[i].addPenality(1);
+				squareList[i].addPenality(bullet.power);
 				if(squareList[i].getLife() < 0) {
-					squareList.splice(i,1);
+					squareList.splice(i,1);					
 				}
+				return true;
 			}
 		}
 	}
+	return false;
 }
 
 //Function to check for agents impact between each other and add a penality
@@ -119,7 +124,7 @@ function detectAgentCollision(square) {
 			   (Math.abs(square.getY() - squareList[i].getY()) * 2 < (square.getSquareSize() + squareList[i].getSquareSize())) ) {
 				square.addPenality(1);				
 				squareList[i].addPenality(1);
-				if(squareList[i].getLife() < 0) {
+				if(squareList[i].getLife() <= 0) {
 					squareList.splice(i,1);
 				}
 			}
