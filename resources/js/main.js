@@ -188,7 +188,7 @@ function generateWorld() {
 	v1.setId('v1');
 	//v1.setX(canvasSize/2);
 	//v1.setY(canvasSize/2);
-    v1.setRangeOfSight(canvasSize/2);
+    v1.setRangeOfSight(canvasSize/1.5);
 	v1.chooseDestiny = function(squareMap) {	    		
 		
 		//Random walking example 1				
@@ -212,7 +212,7 @@ function generateWorld() {
 	v2.setId('v2');
 	v2.setX(canvasSize - squareSize*2);
 	v2.setY(canvasSize - squareSize*2);
-	v2.setRangeOfSight(canvasSize);
+	v2.setRangeOfSight(canvasSize/1.5);
 	v2.chooseDestiny = function(squareMap) {
 		if(v2.hasTargetInSight(squareList)) {
 			v2.shootIt();
