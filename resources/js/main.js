@@ -182,7 +182,7 @@ function generateWorld() {
     })();
 
 	/*Creating the agent and his brain (chooseDestiny function)....*/	
-	for(var i = 0;i<2;i++) {
+	for(var i = 0;i<3;i++) {
 		var square = new Square();
 		square.init({'x':squareSize,'y':squareSize,'stepSize':3,'rangeOfSight':canvasSize/4,'life':100,'squareSize':squareSize,'canvasSize':canvasSize});
 		squareList.push(square);		
@@ -193,45 +193,59 @@ function generateWorld() {
 	v1.setId('v1');
 	//v1.setX(squareSize*2);
 	//v1.setY(canvasSize/2);
-    v1.setRangeOfSight(canvasSize/1.5);
+        v1.setRangeOfSight(canvasSize/1.5);
 	v1.chooseDestiny = function(squareMap) {	    		
-		
-		//Random walking example 1				
-		//If has a target...
-		if(v1.hasTargetInSight(squareList)) {
-			//...shoot the target.
-			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));	
-			v1.shootIt();			    		
-		} else {
-			//Select a random destination.
-			var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
-			if(!move()) {
-				//if it can't move, randomize the direction...
-				v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
-			}
-		}						  
+	    //Random walking example 1				
+	    //If has a target...
+	    if(v1.hasTargetInSight(squareList)) {
+		//...shoot the target.
+		v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));	
+		v1.shootIt();			    		
+	    } else {
+		//Select a random destination.
+		var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
+		if(!move()) {
+			//if it can't move, randomize the direction...
+			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
+		}
+	    }						  
 	};	
     
 	var v2 = squareList[1];
 	v2.color = '#faa';
 	v2.setId('v2');
-	v2.setX(squareSize*2);
+	v2.setX(canvasSize - squareSize*2);
 	v2.setY(canvasSize - squareSize*2);
 	v2.setRangeOfSight(canvasSize/1.5);
 	v2.chooseDestiny = function(squareMap) {
-		if(v2.hasTargetInSight(squareList)) {
-			v2.shootIt();
-		} 	
-		//Circle walking...
-		if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
-			if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
-				v2.setDirectionIndex(v2.getDirectionIndex()+1);
-			} else {
-				v2.setDirectionIndex(0); 
-			}
-		}		
+	    if(v2.hasTargetInSight(squareList)) {
+		v2.shootIt();
+	    } 	
+	    //Circle walking...
+	    if(!v2.getDirectionsArray()[v2.getDirectionIndex()]()) {
+		if(v2.getDirectionIndex()<v2.getDirectionsArray().length-1) {
+			v2.setDirectionIndex(v2.getDirectionIndex()+1);
+		} else {
+			v2.setDirectionIndex(0); 
+		}
+	    }		
 	};
 	
+        var v3 = squareList[2];
+	v3.color = '#aaf';
+	v3.setId('v3');
+	v3.setX(squareSize);
+	v3.setY(canvasSize - squareSize*2);
+	v3.setRangeOfSight(canvasSize/1.5);
+	v3.chooseDestiny = function(squareMap) {
+            //Totaly Random Walking 
+	    if(v3.hasTargetInSight(squareList)) {
+		v3.shootIt();
+	    } else {
+                v3.goToRandomDirection();
+            }	
+	};
+
 	createRandomSimulatorRoom();
 	
     animate(canvas,context);
