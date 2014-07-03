@@ -8,24 +8,39 @@
 </head>
 
 <html lang="en">	
-    <body onLoad="generateWorld()">
-        <h4>jsSquareFight (WIP)</h4>
-	<section id="simulatorArea">
-  	    <canvas id="simulatorRoom"></canvas>          
-	</section>	
-        <!--<section id="brainArea">
-            <div style="border: #000 solid 1px; width: 600px;" float="left">
-                <div style="border: #000 solid 1px; width: 600px;" float="left">
-                    Click on the commands below to put it in blue square's brain area:<br>                
-                </div>
-                <input type="button" data-command="if" value="if"></input>
-                <input type="button" data-command="else" value="else"></input>
-                <input type="button" data-command="goToRandomDirection()" value="Go To Random Direction!"></input>
-                <input type="button" data-command="goToLeft()()" value="Go To Left!"></input>
-                <input type="button" data-command="goToRight()()" value="Go To Right!"></input>
-                <input type="button" data-command="goToUp()()" value="Go To Up!"></input>
-                <input type="button" data-command="goToDown()()" value="Go To Down!"></input>
-            </div>        
-        </section> -->
+    <body align="center" onLoad="generateWorld()">    
+	<section id="simulatorArea" style="width: 1100px;">
+		<h4>jsSquareFight (WIP)</h4>  	            		
+		<div style="border: #000 solid 1px; width: 200px; height: auto; min-height: 300px; float: left" >
+			<div style="border: #000 solid 1px; float: left">
+				Click on the commands below to put it in blue square's brain area:<br>                
+			</div>
+			<div style="width: 200px; height: auto; float: left">
+				<input type="button" onclick="addAction('if')" value="if"></input><br>
+				<input type="button" onclick="addAction('else')" value="else"></input><br>
+				<input type="button" onclick="addAction('goToRandomDirection()')" value="Go to a random direction!"></input><br>
+				<input type="button" onclick="addAction('goToLeft()()')" value="Go to the left!"></input><br>
+				<input type="button" onclick="addAction('goToRight()()')" value="Go to the right!"></input><br>
+				<input type="button" onclick="addAction('goToUp()()')" value="Go up!"></input><br>
+				<input type="button" onclick="addAction('goToDown()()')" value="Go down!"></input><br>
+				<input type="button" onclick="addAction('hasTargetInSight()')" value="Has a target in sight?"></input><br>
+				<input type="button" onclick="addAction('shootIt()')" value="Shoot the target!"></input><br>
+			</div>
+		</div> 			
+		<canvas  id="simulatorRoom"></canvas> 	
+		<div style="border: #000 solid 1px; width: 200px; height: auto; min-height: 300px;float: right" >
+			<div style="border: #000 solid 1px;" float="right">
+				Blue square's brain area:<br>                
+			</div>
+			<div id="blueSquareBrain" style="width: 200px; height: auto;float: right">
+				
+			</div>
+			<div style="border: #000 solid 1px;" float="right">
+				Click on a action to remove it!<br>                
+			</div>
+        </div>		
+	</section>	 
+	<br>	
+	<input type="button" value="Start" onClick="toggleGameStart(this)"></input>
    </body>
 </html>
