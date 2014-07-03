@@ -239,8 +239,7 @@ function generateWorld() {
 	v3.setRangeOfSight(canvasSize/1.5);
 	v3.chooseDestiny = function(squareMap) {
             //Totally Random Walking 
-	    if(v3.hasTargetInSight(squareList)) {
-		v3.shootIt();
+	    if(v3.hasTargetInSight(squareList)) { v3.shootIt();
 	    } else {
                 v3.goToRandomDirection();
             }	
