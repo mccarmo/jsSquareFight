@@ -4,6 +4,7 @@ var squareTypes = ['#fff','#000']; //#fff - nothing / #000 - obstacle
 var squareSize = 30;
 var canvasSize = 600;	
 var canvas = '';
+var gameStarted = false;
 
 //Function to draw the agents...
 function drawSquare(square, context) { 
@@ -66,14 +67,7 @@ function drawSquareBullets(square,context) {
 			//If bullet hits a target, the bullet will be erased
 			if(detectBulletCollision(bullet,squareList)) {
 				square.getBullets().splice(i,1);
-			}
-			
-			/*context.beginPath();	
-			context.font = "bold "+squareSize/2+"px Arial";
-		    context.fillStyle = "black";		    			
-			context.fillText('bullet x: ' + bullet.currPosition.x + ', y: ' + bullet.currPosition.y, bullet.currPosition.x, bullet.currPosition.y);			
-			context.fillText('target x: ' + bullet.targetPosition.x + ', y: ' + bullet.targetPosition.y, bullet.currPosition.x, bullet.currPosition.y-15);
-			context.stroke();*/
+			}	
 		} else {			
 			square.getBullets().splice(i,1); //Remove the bullet from the array			
 		}		        
@@ -140,21 +134,31 @@ function detectAgentCollision(square) {
 		}
 	}
 }
+//Handle Game Start
+function toggleGameStart(btn) {
+	if(gameStarted) {
+		gameStarted=false;
+		btn.value='Start';
+	} else {
+		gameStarted=true;
+		btn.value='Pause';
+	}
+}
 
 //Function to animate the game!
-function animate(canvas,context) {	
-    //Clear
-    context.clearRect(0, 0, canvas.width, canvas.height);
-			
-    drawDirtyRoomTiles(context);
-    
-    //Agent brain goes here...
-    squareList.map(function(v){
-        v.chooseDestiny(squareMap); 
-        drawSquare(v, context);	
-	    detectAgentCollision(v,squareList);		
-    });
-    
+function animate(canvas,context) {	           
+	if(gameStarted) {
+		//Clear
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		//Agent brain goes here...						
+		squareList.map(function(v){
+			v.chooseDestiny(squareMap); 
+			drawSquare(v, context);	
+			detectAgentCollision(v,squareList);		
+		});
+	}
+	drawDirtyRoomTiles(context);
+	
     //Request new frame
     requestAnimFrame(function() {
         setTimeout(function() {
@@ -193,7 +197,7 @@ function generateWorld() {
 	v1.setId('v1');
 	//v1.setX(squareSize*2);
 	//v1.setY(canvasSize/2);
-        v1.setRangeOfSight(canvasSize/1.5);
+    v1.setRangeOfSight(canvasSize/1.5);
 	v1.chooseDestiny = function(squareMap) {	    		
 	    //Random walking example 1				
 	    //If has a target...
@@ -231,7 +235,7 @@ function generateWorld() {
 	    }		
 	};
 	
-        var v3 = squareList[2];
+    var v3 = squareList[2];
 	v3.color = '#aaf';
 	v3.setId('v3');
 	v3.setX(squareSize);
