@@ -140,10 +140,18 @@ function detectAgentCollision(square) {
 function toggleGameStart(btn) {
 	if(gameStarted) {
 		gameStarted=false;
-		btn.value='Start';
+		btn.value='Continue';
+                var e = document.getElementsByClassName("gameAction");
+                for(var i =0;i<e.length;i++) {
+                    e[i].disabled = false;               
+                }
 	} else {
 		gameStarted=true;
 		btn.value='Pause';
+                var e = document.getElementsByClassName("gameAction");
+                for(var i =0;i<e.length;i++) {
+                    e[i].disabled = true;               
+                }
 	}
 }
 
@@ -170,7 +178,7 @@ function animate(canvas,context) {
 }
 //Function to erase the brain
 function eraseTheBrain() {
-    rainString = '';  
+    brainString = '';  
     blueBrain = [];
     document.getElementById("brainString").value = "";     
 }
@@ -185,7 +193,7 @@ function addAction(action) {
       } else {
           blueBrain.push(")" + action);
       }
-   } else if(action=="}" || action == "else") {
+   } else if(action=="}" || action == "else" || action == "||" || action == "&&" || action =="!") {
       blueBrain.push(action);
    } else {
       blueBrain.push("v3."+action);
@@ -271,7 +279,7 @@ function generateWorld() {
                 eval(brainString);
             } catch(err) {
                 alert("There's something wrong with the logic!");
-                brainString = '';
+                eraseTheBrain();
             } 
 	};
 
