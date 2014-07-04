@@ -5,6 +5,8 @@ var squareSize = 30;
 var canvasSize = 600;	
 var canvas = '';
 var gameStarted = false;
+var blueBrain = [];
+var brainString = '';
 
 //Function to draw the agents...
 function drawSquare(square, context) { 
@@ -15,7 +17,7 @@ function drawSquare(square, context) {
     context.strokeStyle = square.getColor();
     context.stroke();  
     //Draw Bullets
-	drawSquareBullets(square,context);
+    drawSquareBullets(square,context);
     //Agent	
     context.beginPath();
     context.rect(square.getX(), square.getY(), squareSize, squareSize);
@@ -24,12 +26,12 @@ function drawSquare(square, context) {
     context.lineWidth = 1;
     context.strokeStyle = 'black';
     context.stroke();    
-	//Life
-	context.beginPath();	
+    //Life
+    context.beginPath();	
     context.fillStyle = "blue";
     context.font = "bold "+squareSize/2+"px Arial";
     context.fillText(square.getLife(), square.getX()+3, square.getY()+20);
-	context.stroke();
+    context.stroke();
 }
 
 //Draw Bullets
@@ -166,6 +168,31 @@ function animate(canvas,context) {
         }, 10);
     });
 }
+//Function to erase the brain
+function eraseTheBrain() {
+    rainString = '';  
+    blueBrain = [];
+    document.getElementById("brainString").value = "";     
+}
+//Function to add the actions to the blue square brain
+function addAction(action) {
+   brainString = '';     
+   if(action=="if") {
+      blueBrain.push(action + "(");
+   } else if(action=="{") {
+      if(blueBrain[blueBrain.length-1]=="else") {
+          blueBrain.push(action);
+      } else {
+          blueBrain.push(")" + action);
+      }
+   } else if(action=="}" || action == "else") {
+      blueBrain.push(action);
+   } else {
+      blueBrain.push("v3."+action);
+   }
+   blueBrain.map(function(bbm){brainString+=bbm});
+   document.getElementById("brainString").value = brainString;     
+}
 
 //Function to generate the requested game type by initializing the room and the agents.
 function generateWorld() {	
@@ -197,22 +224,20 @@ function generateWorld() {
 	v1.setId('v1');
 	//v1.setX(squareSize*2);
 	//v1.setY(canvasSize/2);
-    v1.setRangeOfSight(canvasSize/1.5);
+        v1.setRangeOfSight(canvasSize/1.5);
 	v1.chooseDestiny = function(squareMap) {	    		
 	    //Random walking example 1				
 	    //If has a target...
 	    if(v1.hasTargetInSight(squareList)) {
 		//...shoot the target.
-		v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));	
-		v1.shootIt();			    		
-	    } else {
-		//Select a random destination.
+		v1.shootIt();
+                //Select a random destination.
 		var move = v1.getDirectionsArray()[v1.getDirectionIndex()];		
 		if(!move()) {
 			//if it can't move, randomize the direction...
 			v1.setDirectionIndex(Math.floor(Math.random()*v1.getDirectionsArray().length));							
-		}
-	    }						  
+		}			    		
+	    } 						  
 	};	
     
 	var v2 = squareList[1];
@@ -242,14 +267,15 @@ function generateWorld() {
 	v3.setY(canvasSize - squareSize*2);
 	v3.setRangeOfSight(canvasSize/1.5);
 	v3.chooseDestiny = function(squareMap) {
-            //Totally Random Walking 
-	    if(v3.hasTargetInSight(squareList)) { v3.shootIt();
-	    } else {
-                v3.goToRandomDirection();
-            }	
+            try {
+                eval(brainString);
+            } catch(err) {
+                alert("There's something wrong with the logic!");
+                brainString = '';
+            } 
 	};
 
 	createRandomSimulatorRoom();
 	
-    animate(canvas,context);
+        animate(canvas,context);
 }
