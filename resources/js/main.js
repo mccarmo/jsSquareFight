@@ -186,20 +186,31 @@ function eraseTheBrain() {
 function addAction(action) {
    brainString = '';     
    if(action=="if") {
-      blueBrain.push(action + "(");
+      if(blueBrain[blueBrain.length-1]=="else") {action = " " + action}
+      blueBrain.push(action + " (");
    } else if(action=="{") {
       if(blueBrain[blueBrain.length-1]=="else") {
-          blueBrain.push(action);
+          blueBrain.push(" " + action);
       } else {
-          blueBrain.push(")" + action);
+          blueBrain.push(" ) " + action);
       }
    } else if(action=="}" || action == "else" || action == "||" || action == "&&" || action =="!") {
-      blueBrain.push(action);
+      blueBrain.push(" " + action + " ");
    } else {
-      blueBrain.push("v3."+action);
+      blueBrain.push(" v3."+action+ " ");
    }
    blueBrain.map(function(bbm){brainString+=bbm});
-   document.getElementById("brainString").value = brainString;     
+   
+   var lexicalAnalyzer = new LexicalAnalyzer();   
+   var syntacticAnalyzer = new SyntacticAnalyzer();
+   
+   //if lexically ok...
+   if(lexicalAnalyzer.analyze(brainString)) {
+       //if syntactically ok...
+	   if(syntacticAnalyzer.analyze(brainString, lexicalAnalyzer.wordTypes)) {
+	       document.getElementById("brainString").value = brainString;	
+       }
+   }     
 }
 
 //Function to generate the requested game type by initializing the room and the agents.
