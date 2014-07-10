@@ -36,8 +36,7 @@ function SyntacticAnalyzer() {
                 ori = dest.getId(); 
             } 	
         }  
-        return true; //Syntactical Analyzer disabled :(, still in progress
-        //return checkFinalState(automata,ori);
+        return checkFinalState(automata,ori);
    }
 }
 
@@ -89,19 +88,22 @@ function Automata() {
     }
 
     this.getTransition = function(ori,symbol) {
-        transitions.map(function(t){	
-            if(symbol.indexOf("v3.")!=-1) {		
-                if((t.getOrigin().getId()===ori && t.getSymbol()==='v3')) {
-                    console.log(symbol);    
-	            return t;
+        var transition;
+        transitions.map(function(t){	  
+            if(symbol.indexOf("v3.")===0) {		
+                if((t.getOrigin().getId()===ori && t.getSymbol()==='v3')) {    
+                    console.log('ori: ' + ori+' symbol: '+t.getSymbol()+' mySymbol: '+symbol);
+	            transition = t;
+                    return;
 	        }
             } else {
                 if((t.getOrigin().getId()===ori && t.getSymbol()===symbol)) {
-	            return t;
+	            transition = t;
+                    return;
 	        }
             }		
         });
-        return "";		
+        return transition;		
     }
 
     this.isFinalState = function(ori) {		
