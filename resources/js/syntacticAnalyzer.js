@@ -12,21 +12,33 @@ function SyntacticAnalyzer() {
         automata.setState(5);
         automata.setState(6);
         automata.setState(7);
+		automata.setState(8);
+		automata.setState(9);
+		automata.setState(10);
 
         automata.setInitState(0);
-        automata.setFinalState(7);	
+		automata.setFinalState(8);
+        automata.setFinalState(9);	
+		automata.setFinalState(10);
         automata.setTransition(new Transition({'ori':0,'dest':1,'symbol':'if'}));
         automata.setTransition(new Transition({'ori':1,'dest':2,'symbol':'('}));
-        automata.setTransition(new Transition({'ori':1,'dest':3,'symbol':'('}));
         automata.setTransition(new Transition({'ori':2,'dest':3,'symbol':'!'}));
-        automata.setTransition(new Transition({'ori':3,'dest':4,'symbol':'v3'}));
-        automata.setTransition(new Transition({'ori':4,'dest':2,'symbol':'&&'}));
-        automata.setTransition(new Transition({'ori':4,'dest':2,'symbol':'||'}));
-        automata.setTransition(new Transition({'ori':4,'dest':5,'symbol':')'}));
-        automata.setTransition(new Transition({'ori':5,'dest':6,'symbol':'{'}));
-        automata.setTransition(new Transition({'ori':6,'dest':7,'symbol':'}'}));
-        automata.setTransition(new Transition({'ori':6,'dest':1,'symbol':'if'}));
-
+		automata.setTransition(new Transition({'ori':2,'dest':4,'symbol':'v3'}));
+		automata.setTransition(new Transition({'ori':3,'dest':4,'symbol':'v3'}));
+		automata.setTransition(new Transition({'ori':4,'dest':2,'symbol':'&&'}));
+		automata.setTransition(new Transition({'ori':4,'dest':2,'symbol':'||'}));
+		automata.setTransition(new Transition({'ori':4,'dest':5,'symbol':')'}));
+		automata.setTransition(new Transition({'ori':5,'dest':6,'symbol':'{'}));
+		automata.setTransition(new Transition({'ori':6,'dest':7,'symbol':'v3'}));
+		automata.setTransition(new Transition({'ori':6,'dest':1,'symbol':'if'}));
+		automata.setTransition(new Transition({'ori':7,'dest':6,'symbol':';'}));
+		automata.setTransition(new Transition({'ori':7,'dest':8,'symbol':'}'}));
+		automata.setTransition(new Transition({'ori':8,'dest':8,'symbol':'}'}));
+		automata.setTransition(new Transition({'ori':0,'dest':9,'symbol':'v3'}));
+		automata.setTransition(new Transition({'ori':9,'dest':10,'symbol':';'}));
+		automata.setTransition(new Transition({'ori':10,'dest':9,'symbol':'v3'}));
+		automata.setTransition(new Transition({'ori':8,'dest':10,'symbol':'v3'}));
+		
         var ori  = 0;
         var dest, transition;
         for(var i=0;i<wordTypes.length;i++) {
@@ -69,7 +81,7 @@ function Transition(properties) {
 function Automata() {
     var states = [];
     var transitions = [];	
-    var initState, finalState;
+    var initState, finalState = [];
 	
     this.setState = function(id) {	    
 	states.push(new State(id));		
@@ -80,11 +92,11 @@ function Automata() {
     }   
 
     this.setFinalState = function(id) {
-        finalState = new State({'id':id});
+        finalState.push(new State({'id':id}));
     } 	
 
     this.setTransition = function(transition) {
-	transitions.push(transition);				
+		transitions.push(transition);				
     }
 
     this.getTransition = function(ori,symbol) {
@@ -107,7 +119,14 @@ function Automata() {
     }
 
     this.isFinalState = function(ori) {		
-        return (ori==finalState.getId());
+	    var isFinal = false;
+		finalState.map(function(f){
+		   if((ori==f.getId())) {
+		       isFinal = true;
+			   return;
+		   }
+		});
+        return isFinal; 
     }
 }
 
