@@ -146,12 +146,16 @@ function toggleGameStart(btn) {
                     e[i].disabled = false;               
                 }
 	} else {
-		gameStarted=true;
-		btn.value='Pause';
+            var syntacticAnalyzer = new SyntacticAnalyzer();
+            //if syntactically ok...
+            if(syntacticAnalyzer.analyze(blueBrain)) {
+	        gameStarted=true;
+	        btn.value='Pause';
                 var e = document.getElementsByClassName("gameAction");
                 for(var i =0;i<e.length;i++) {
                     e[i].disabled = true;               
                 }
+            }
 	}
 }
 
@@ -186,30 +190,33 @@ function eraseTheBrain() {
 function addAction(action) {
    brainString = '';     
    if(action=="if") {
-      if(blueBrain[blueBrain.length-1]=="else") {action = " " + action}
-      blueBrain.push(action + " (");
+      blueBrain.push(action);
+      blueBrain.push("(");
    } else if(action=="{") {
       if(blueBrain[blueBrain.length-1]=="else") {
-          blueBrain.push(" " + action);
+          blueBrain.push(action);
       } else {
-          blueBrain.push(" ) " + action);
+          blueBrain.push(")");
+          blueBrain.push(action);
       }
    } else if(action=="}" || action == "else" || action == "||" || action == "&&" || action =="!") {
-      blueBrain.push(" " + action + " ");
+      blueBrain.push(action);
    } else {
-      blueBrain.push(" v3."+action+ " ");
+      if(blueBrain.length > 0 && blueBrain[blueBrain.length-1].indexOf("v3.")!=-1) {
+          blueBrain.push(";");
+          blueBrain.push("v3."+action);
+          blueBrain.push(";");
+      } else {
+          blueBrain.push("v3."+action);
+      }
    }
    blueBrain.map(function(bbm){brainString+=bbm});
    
    var lexicalAnalyzer = new LexicalAnalyzer();   
-   var syntacticAnalyzer = new SyntacticAnalyzer();
    
    //if lexically ok...
-   if(lexicalAnalyzer.analyze(brainString)) {
-       //if syntactically ok...
-	   if(syntacticAnalyzer.analyze(brainString, lexicalAnalyzer.wordTypes)) {
-	       document.getElementById("brainString").value = brainString;	
-       }
+   if(lexicalAnalyzer.analyze(blueBrain)) {
+       document.getElementById("brainString").value = brainString;	
    }     
 }
 
