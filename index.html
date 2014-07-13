@@ -3,6 +3,7 @@
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
+	<link   rel="stylesheet" 	   href="resources/css/style.css" type="text/css">
 	<script type="text/javascript" src="resources/js/lexicalAnalyzer.js"></script>
 	<script type="text/javascript" src="resources/js/syntacticAnalyzer.js"></script>
 	<script type="text/javascript" src="resources/js/square.js"></script>        
@@ -19,33 +20,35 @@
 				        Click on the commands below to put it in blue square's brain area:<br>                
 			        </div>
 			        <div style="width: 400px; height: auto; float: left">
-				        <input type="button" class="gameAction" onclick="addAction('if')" value="if"></input>
-				        <input type="button" class="gameAction" onclick="addAction('{')" value="then (if/else)"></input>
-				        <input type="button" class="gameAction" onclick="addAction('else')" value="else"></input>
-				        <input type="button" class="gameAction" onclick="addAction('}')" value="end (if/else)"></input>
-                                        <input type="button" class="gameAction" onclick="addAction('!')" value="not"></input>
-                                        <input type="button" class="gameAction" onclick="addAction('&&')" value="and"></input>
-                                        <input type="button" class="gameAction" onclick="addAction('||')" value="or"></input>
-				        <input type="button" class="gameAction" onclick="addAction('goToRandomDirection()')" value="Go to a random direction!"></input>
-				        <input type="button" class="gameAction" onclick="addAction('goLeft()()')" value="Go to the left!"></input>
-				        <input type="button" class="gameAction" onclick="addAction('goRight()()')" value="Go to the right!"></input>
-				        <input type="button" class="gameAction" onclick="addAction('goUp()()')" value="Go up!"></input>
-				        <input type="button" class="gameAction" onclick="addAction('goDown()()')" value="Go down!"></input>
-				        <input type="button" class="gameAction" onclick="addAction('hasTargetInSight(squareList)')" value="Has a target in sight?"></input>
-				        <input type="button" class="gameAction" onclick="addAction('shootIt()')" value="Shoot the target!"></input>
+				        <input title="If..." type="button" class="if gameAction" onclick="addAction('if','if')"></input>
+				        <input title="then..." type="button" class="then gameAction" onclick="addAction('then','{')"></input>
+				        <input title="else..." type="button" class="else gameAction" onclick="addAction('else','else')"></input>
+				        <input title="end..." type="button" class="end gameAction" onclick="addAction('end','}')"></input>
+                                        <input title="not..." type="button" class="not gameAction" onclick="addAction('not','!')"></input>
+                                        <input title="and..." type="button" class="and gameAction" onclick="addAction('and','&&')"></input>
+                                        <input title="or..." type="button" class="or gameAction" onclick="addAction('or','||')"></input>
+				        <input title="Go to a random direction!" type="button" class="random gameAction" onclick="addAction('random','goToRandomDirection()')"></input>
+				        <input title="Go to the Left!" type="button" class="left gameAction" onclick="addAction('left','goLeft()()')"></input>
+				        <input title="Go to the Right!" type="button" class="right gameAction" onclick="addAction('right','goRight()()')" ></input>
+				        <input title="Go Up!" type="button" class="up gameAction" onclick="addAction('up','goUp()()')"></input>
+				        <input title="Go Down!" type="button" class="down gameAction" onclick="addAction('down','goDown()()')"></input>
+				        <input title="Has a target in Sight?" type="button" class="target gameAction" onclick="addAction('target','hasTargetInSight(squareList)')"></input>
+				        <input title="Shoot the Target!" type="button" class="shoot gameAction" onclick="addAction('shoot','shootIt()')"></input>
 			        </div>
 		        </div> 			
-                        <div style="border: #000 solid 1px; width: 400px; height: auto; min-height: 300px;float: left" >
-			        <div style="border: #000 solid 1px;" float="right">
-				        Blue square's brain area:<br>                
-			        </div>
-			        <div id="blueSquareBrain" style="width: 400px; height: auto;float: right">
-				        <textarea rows="25" cols="45" id="brainString" readonly="readonly"></textarea>
-			        </div>
-	                        <input type="button" value="Erase the brain!" onClick="eraseTheBrain()"></input>                			        
-                        </div>
+                    <div style="border: #000 solid 1px; width: 400px; height: auto;float: left">
+						<div style="border: #000 solid 1px;" float="right">
+							Blue square's brain area:<br>                
+						</div>
+						<div id="blueSquareBrain" style="width: 400px; height: auto;float: right">
+							
+						</div>
+						<input type="button" value="Erase the brain!" onClick="eraseTheBrain()"></input>                			        
+                    </div>
                         <br>	
 	                <input type="button" value="Start" onClick="toggleGameStart(this)"></input>                
+					<input type="button" value="Save Brain" onClick="toggleGameStart(this)"></input>
+					<input type="button" value="Load Brain" onClick="toggleGameStart(this)"></input>
                 </div>	
 		<canvas  id="simulatorRoom"></canvas> 		
 	</section>	 

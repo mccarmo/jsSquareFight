@@ -155,6 +155,8 @@ function toggleGameStart(btn) {
                 for(var i =0;i<e.length;i++) {
                     e[i].disabled = true;               
                 }
+            } else {
+                alert("There's something wrong with the logic!");
             }
 	}
 }
@@ -181,42 +183,58 @@ function animate(canvas,context) {
     });
 }
 //Function to erase the brain
-function eraseTheBrain() {
-    brainString = '';  
+function eraseTheBrain() {    
     blueBrain = [];
-    document.getElementById("brainString").value = "";     
+    brainString = '';
+    var gameArea = document.getElementById("blueSquareBrain");
+    if(gameArea.hasChildNodes()) {
+        while (gameArea.firstChild) {
+           gameArea.removeChild(gameArea.firstChild);
+        }
+    }    
 }
 //Function to add the actions to the blue square brain
-function addAction(action) {
-   brainString = '';     
+function addAction(btnClass,action) {     
    if(action=="if") {
       blueBrain.push(action);
+      brainString+=action;
       blueBrain.push("(");
+      brainString+="(";  
    } else if(action=="{") {
       if(blueBrain[blueBrain.length-1]=="else") {
           blueBrain.push(action);
+          brainString+=action;
       } else {
           blueBrain.push(")");
+          brainString+=")";
           blueBrain.push(action);
+          brainString+=action;
       }
    } else if(action=="}" || action == "else" || action == "||" || action == "&&" || action =="!") {
       blueBrain.push(action);
+      brainString+=action;
    } else {
       if(blueBrain.length > 0 && blueBrain[blueBrain.length-1].indexOf("v3.")!=-1) {
           blueBrain.push(";");
+          brainString+=";";
           blueBrain.push("v3."+action);
+          brainString+="v3."+action;
           blueBrain.push(";");
+          brainString+=";";
       } else {
           blueBrain.push("v3."+action);
+          brainString+="v3."+action;
       }
    }
-   blueBrain.map(function(bbm){brainString+=bbm});
-   
+     
    var lexicalAnalyzer = new LexicalAnalyzer();   
    
    //if lexically ok...
-   if(lexicalAnalyzer.analyze(blueBrain)) {
-       document.getElementById("brainString").value = brainString;	
+   if(lexicalAnalyzer.analyze(blueBrain)) { 
+       var action = document.createElement("input");	
+	   action.type = "button";
+	   action.className = btnClass + " gameAction";	
+	   document.getElementById("blueSquareBrain").appendChild(action);	      
    }     
 }
 
@@ -297,7 +315,6 @@ function generateWorld() {
                 eval(brainString);
             } catch(err) {
                 alert("There's something wrong with the logic!");
-                eraseTheBrain();
             } 
 	};
 
