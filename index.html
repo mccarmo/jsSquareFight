@@ -10,33 +10,33 @@
 	<script type="text/javascript" src="resources/js/main.js"></script>
 </head>
 
-<html lang="en">	
+<html lang="en">
     <body align="center" onLoad="generateWorld()">    
 	<section id="simulatorArea" style="width: 1200; height: 600px;">
 		<h4>jsSquareFight (WIP)</h4>  	            	
                 <div style="border: #000 solid 1px; width: 400px; height: auto; float: right">	
-		        <div style="border: #000 solid 1px; width: 400px; height: auto; float: left" >
-			        <div style="border: #000 solid 1px; float: left">
-				        Click on the commands below to put it in blue square's brain area:<br>                
-			        </div>
-			        <div style="width: 400px; height: auto; float: left">
-				        <input title="If..." type="button" class="if gameAction" onclick="addAction('if','if')"></input>
-				        <input title="then..." type="button" class="then gameAction" onclick="addAction('then','{')"></input>
-				        <input title="else..." type="button" class="else gameAction" onclick="addAction('else','else')"></input>
-				        <input title="end..." type="button" class="end gameAction" onclick="addAction('end','}')"></input>
-						<input title="not..." type="button" class="not gameAction" onclick="addAction('not','!')"></input>
-						<input title="and..." type="button" class="and gameAction" onclick="addAction('and','&&')"></input>
-						<input title="or..." type="button" class="or gameAction" onclick="addAction('or','||')"></input>
-				        <input title="Go to a random direction!" type="button" class="random gameAction" onclick="addAction('random','goToRandomDirection()')"></input>
-				        <input title="Go to the Left!" type="button" class="left gameAction" onclick="addAction('left','goLeft()()')"></input>
-				        <input title="Go to the Right!" type="button" class="right gameAction" onclick="addAction('right','goRight()()')" ></input>
-				        <input title="Go Up!" type="button" class="up gameAction" onclick="addAction('up','goUp()()')"></input>
-				        <input title="Go Down!" type="button" class="down gameAction" onclick="addAction('down','goDown()()')"></input>
-				        <input title="Has a target in Sight?" type="button" class="target gameAction" onclick="addAction('target','hasTargetInSight(squareList)')"></input>
-				        <input title="Shoot the Target!" type="button" class="shoot gameAction" onclick="addAction('shoot','shootIt()')"></input>
-			        </div>
-		        </div> 			
-                    <div style="border: #000 solid 1px; width: 400px; height: auto;float: left">
+					<div style="border: #000 solid 1px; width: 400px; height: auto; float: left" >
+						<div style="border: #000 solid 1px; float: left">
+							Click on the commands below to put it in blue square's brain area:<br>                
+						</div>
+						<div style="width: 400px; height: auto; float: left">
+							<input title="If..." type="button" class="if gameAction" onclick="addAction('if','if')"></input>
+							<input title="then..." type="button" class="then gameAction" onclick="addAction('then','{')"></input>
+							<input title="else..." type="button" class="else gameAction" onclick="addAction('else','else')"></input>
+							<input title="end..." type="button" class="end gameAction" onclick="addAction('end','}')"></input>
+							<input title="not..." type="button" class="not gameAction" onclick="addAction('not','!')"></input>
+							<input title="and..." type="button" class="and gameAction" onclick="addAction('and','&&')"></input>
+							<input title="or..." type="button" class="or gameAction" onclick="addAction('or','||')"></input>
+							<input title="Go to a random direction!" type="button" class="random gameAction" onclick="addAction('random','goToRandomDirection()')"></input>
+							<input title="Go to the Left!" type="button" class="left gameAction" onclick="addAction('left','goLeft()()')"></input>
+							<input title="Go to the Right!" type="button" class="right gameAction" onclick="addAction('right','goRight()()')" ></input>
+							<input title="Go Up!" type="button" class="up gameAction" onclick="addAction('up','goUp()()')"></input>
+							<input title="Go Down!" type="button" class="down gameAction" onclick="addAction('down','goDown()()')"></input>
+							<input title="Has a target in Sight?" type="button" class="target gameAction" onclick="addAction('target','hasTargetInSight(squareList)')"></input>
+							<input title="Shoot the Target!" type="button" class="shoot gameAction" onclick="addAction('shoot','shootIt()')"></input>
+						</div>
+					</div> 			
+					<div style="border: #000 solid 1px; width: 400px; height: auto;float: left">
 						<div style="border: #000 solid 1px;" float="right">
 							Blue square's brain area:<br>                
 						</div>
@@ -44,11 +44,11 @@
 							
 						</div>
 						<input type="button" value="Erase the brain!" onClick="eraseTheBrain()"></input>                			        
-                    </div>
-                        <br>	
-	                <input type="button" value="Start" onClick="toggleGameStart(this)"></input>                
-					<input type="button" value="Save Brain" onClick="toggleGameStart(this)"></input>
-					<input type="button" value="Load Brain" onClick="toggleGameStart(this)"></input>
+					</div>
+						<br>	
+					<input type="button" value="Start" onClick="toggleGameStart(this)"></input>                
+					<input type="button" disabled value="Save Brain" onClick="saveBrain(this)"></input>
+					<input type="button" disabled value="Load Brain" onClick="loadBrain(this)"></input>
                 </div>	
 		<canvas  id="simulatorRoom"></canvas> 		
 	</section>	 

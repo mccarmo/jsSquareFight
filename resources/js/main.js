@@ -136,6 +136,13 @@ function detectAgentCollision(square) {
 		}
 	}
 }
+
+//Handle Save Brain
+function saveBrain() {}
+
+//Handle Load Brain
+function loadBrain() {}
+
 //Handle Game Start
 function toggleGameStart(btn) {
 	if(gameStarted) {
