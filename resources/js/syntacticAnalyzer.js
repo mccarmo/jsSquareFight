@@ -48,7 +48,7 @@ function SyntacticAnalyzer() {
                 ori = dest.getId(); 
             } 	
         }  
-        return checkFinalState(automata,ori);
+        return automata.isFinalState(ori);
    }
 }
 
@@ -127,15 +127,5 @@ function Automata() {
 		   }
 		});
         return isFinal; 
-    }
-}
-
-function checkFinalState(automata,origin) {
-    if(automata.isFinalState(origin)){
-	console.log('Input ok.');
-        return true;
-    } else {
-	console.log('Invalid input.');
-        return false;
     }
 }
