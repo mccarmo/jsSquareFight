@@ -12,25 +12,25 @@ var brainString = '';
 function drawSquare(square, context) { 
     //Ray Of Sight	
     context.beginPath();
-    context.arc(square.getX()+squareSize/2, square.getY()+squareSize/2, square.getRangeOfSight(), 0, 2 * Math.PI, false);         
-    context.lineWidth = 1;
-    context.strokeStyle = square.getColor();
+		context.arc(square.getX()+squareSize/2, square.getY()+squareSize/2, square.getRangeOfSight(), 0, 2 * Math.PI, false);         
+		context.lineWidth = 1;
+		context.strokeStyle = square.getColor();
     context.stroke();  
     //Draw Bullets
     drawSquareBullets(square,context);
     //Agent	
     context.beginPath();
-    context.rect(square.getX(), square.getY(), squareSize, squareSize);
-    context.fillStyle = square.getColor();
-    context.fill();
-    context.lineWidth = 1;
-    context.strokeStyle = 'black';
+		context.rect(square.getX(), square.getY(), squareSize, squareSize);
+		context.fillStyle = square.getColor();
+		context.fill();
+		context.lineWidth = 1;
+		context.strokeStyle = 'black';
     context.stroke();    
     //Life
     context.beginPath();	
-    context.fillStyle = "blue";
-    context.font = "bold "+squareSize/2+"px Arial";
-    context.fillText(square.getLife(), square.getX()+3, square.getY()+20);
+		context.fillStyle = "blue";
+		context.font = "bold "+squareSize/2+"px Arial";
+		context.fillText(square.getLife(), square.getX()+3, square.getY()+20);
     context.stroke();
 }
 
@@ -59,17 +59,17 @@ function drawSquareBullets(square,context) {
 			bullet.currPosition.y += (bullet.velocity * bullet.direction.y * Math.sin(theta) * 1);
 			
 			context.beginPath();
-			context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, squareSize/6, 0, 2 * Math.PI, false);  							
-			context.lineWidth = 1;
-			context.strokeStyle = "black";
-			context.fillStyle = square.getColor();	
-			context.fill();			
+				context.arc(bullet.currPosition.x+squareSize/2,bullet.currPosition.y+squareSize/2, squareSize/6, 0, 2 * Math.PI, false);  							
+				context.lineWidth = 1;
+				context.strokeStyle = "black";
+				context.fillStyle = square.getColor();	
+				context.fill();			
 			context.stroke();
 			
 			//If bullet hits a target, the bullet will be erased
-			if(detectBulletCollision(bullet,squareList)) {
+			if(detectBulletCollision(bullet,squareList) || (bullet.currPosition.x == bullet.targetPosition.x && bullet.currPosition.y == bullet.targetPosition.y)) {
 				square.getBullets().splice(i,1);
-			}	
+			}
 		} else {			
 			square.getBullets().splice(i,1); //Remove the bullet from the array			
 		}		        
@@ -91,11 +91,11 @@ function createRandomSimulatorRoom() {
 function drawDirtyRoomTiles(context) {
     for (var i = 0; i < squareMap.length; i++) {  
         context.beginPath();
-        context.rect(squareMap[i][0],squareMap[i][1], squareSize, squareSize);
-        context.fillStyle = squareMap[i][2];
-        context.fill();
-        context.lineWidth = 1;
-        context.strokeStyle = '#bbb';					
+			context.rect(squareMap[i][0],squareMap[i][1], squareSize, squareSize);
+			context.fillStyle = squareMap[i][2];
+			context.fill();
+			context.lineWidth = 1;
+			context.strokeStyle = '#bbb';					
         context.stroke(); 		
    } 
 }		
